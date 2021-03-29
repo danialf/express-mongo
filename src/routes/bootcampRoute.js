@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { getBootcamps, getBootcamp, postBootcamp, putBootcamp, deleteBootcamp } from '../controllers/bootcampController.js';
+import { getBootcamps, getBootcamp, postBootcamp, updateBootcamp, deleteBootcamp } from '../controllers/bootcampController.js';
 
 const router = Router();
 
@@ -12,7 +12,7 @@ router
 router
      .route('/:id')
      .get(getBootcamp)
-     .put(putBootcamp)
+     .put(updateBootcamp)
      .delete(deleteBootcamp);
 
 export default router;
