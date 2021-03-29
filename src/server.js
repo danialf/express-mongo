@@ -1,6 +1,7 @@
 import express, { json } from 'express';
 import { config } from 'dotenv';
 import morgan from 'morgan';
+import errorHandlerMiddleware from './middleware/errorMiddleware.js';
 // import connectDB from './config/db';
 
 // Load env vars
@@ -12,6 +13,7 @@ config({
 // Routes
 import bootcamps from './routes/bootcampRoute.js';
 
+
 const app = express();
 
 // Body parser
@@ -22,8 +24,19 @@ if (process.env.NODE_ENV !== "production") {
      app.use(morgan('dev'));
 }
 
+// ping
+app.get('/ping', (req, res) => {
+     res.status(200).send({
+          success: true,
+          message: `server time ${Date.now.toString}`
+     })
+})
+
 // Mount routes
 app.use('/api/v1/bootcamps', bootcamps);
+
+// Error handler Middleware
+app.use(errorHandlerMiddleware);
 
 const PORT = process.env.PORT || 3000;
 
