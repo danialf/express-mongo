@@ -1,6 +1,6 @@
-const mongoose, { Schema } = require('mongoose');
+import mongoose from 'mongoose';
 
-const BootcampSchema = new Schema({
+const BootcampSchema = new mongoose.Schema({
      name: {
           type: String,
           require: [true, 'Please add a name'],
@@ -100,4 +100,4 @@ const BootcampSchema = new Schema({
 
 const Bootcamp = mongoose.model('bootcamp',BootcampSchema);
 
-module.exports = Bootcamp;
+export default Bootcamp;

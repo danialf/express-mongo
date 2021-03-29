@@ -1,19 +1,23 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const morgan = require('morgan');
-const connectDB = require('./config/db');
+import express, { json } from 'express';
+import { config } from 'dotenv';
+import morgan from 'morgan';
+// import connectDB from './config/db';
 
 // Load env vars
-dotenv.config({
+config({
      path: './config/config.env'
 });
 
 
 // Routes
-const bootcamps = require('./routes/bootcampRoute');
+import bootcamps from './routes/bootcampRoute.js';
 
 const app = express();
 
+// Body parser
+app.use(express.json());
+
+// Dev logging middleware
 if (process.env.NODE_ENV !== "production") {
      app.use(morgan('dev'));
 }
