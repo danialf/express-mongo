@@ -28,7 +28,7 @@ if (process.env.NODE_ENV !== "production") {
 app.get('/ping', (req, res) => {
      res.status(200).send({
           success: true,
-          message: `server time ${Date.now.toString}`
+          message: `server time: ${new Date().toLocaleString()}`
      })
 })
 

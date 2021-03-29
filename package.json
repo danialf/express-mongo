@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/server.js",
+  "extension": "js",
   "scripts": {
     "start": "SET NODE_ENV=production && node -r ./src/server",
     "dev": "nodemon server"
