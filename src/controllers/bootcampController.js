@@ -8,7 +8,14 @@ import geocoder from '../services/geocoder.js';
 // @route GET /api/v1/bootcamps
 // @access PUBLIC
 export const getBootcamps = asyncHandler(async (req, res, next) => {
-     const bootcamps = await Bootcamp.find();
+     let query;
+     let queryString = JSON.stringify(req.query);
+
+     queryString = queryString.replace(/\b(gt|gte|le|lte|in)\b/g, match => `$${match}`);
+
+     query = Bootcamp.find(JSON.parse(queryString));
+
+     const bootcamps = await queryString;
      res.status(200).json({
           success: true,
           data: bootcamps,
