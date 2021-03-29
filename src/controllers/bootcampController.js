@@ -1,6 +1,8 @@
 import Bootcamp from '../models/Bootcamp.js';
 import ErrorResponse from '../response/errorResponse.js';
 import asyncHandler from '../middleware/asyncMiddleware.js';
+import geocoder from '../services/geocoder.js';
+
 
 // @desc Get all bootcamps
 // @route GET /api/v1/bootcamps
@@ -75,3 +77,48 @@ export const deleteBootcamp = asyncHandler(async (req, res, next) => {
           data: {}
      })
 })
+
+// @desc Get bootcamps within a radius
+// @route GET /api/v1/bootcamps/radius/:zipcode/:distance/
+// @access PRIVATE
+export const getBootcampsInRadius = asyncHandler(async (req, res, next) => {
+     const { zipcode, distance } = req.params;
+
+     // get lat/lng from geocoder
+     const loc = await geocoder.geocode(zipcode);
+     const lat = loc[0].latitude;
+     const lng = loc[0].longitude;
+
+     await _getBootcampsInRadius(lng, lat, distance, res)
+})
+
+// @desc Get bootcamps within a radius
+// @route GET /api/v1/bootcamps/radius/:zipcode/:distance/
+// @access PRIVATE
+export const getBootcampsInRadiusWithLatNLng = asyncHandler(async (req, res, next) => {
+     const { lat, lng, distance } = req.params;
+
+     await _getBootcampsInRadius(lng, lat, distance, res);
+})
+
+// Fetch bootcamps in radius
+const _getBootcampsInRadius = async (lng, lat, distance, res) => {
+     // Calculate radius using radians
+     // Divide dist by radius of Earth
+     // Earth radius = 3,963 mi / 6,378 km
+     const radius = distance / 3963;
+
+     const bootcamps = await Bootcamp.find({
+          location: {
+               $geoWithin: {
+                    $centerSphere: [[lng, lat], radius]
+               }
+          }
+     });
+
+     res.status(200).json({
+          success: true,
+          count: bootcamps.length,
+          data: bootcamps
+     });
+}
