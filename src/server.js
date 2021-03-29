@@ -1,4 +1,4 @@
-import express, { json } from 'express';
+import express from 'express';
 import { config } from 'dotenv';
 import morgan from 'morgan';
 import errorHandlerMiddleware from './middleware/errorMiddleware.js';
@@ -6,13 +6,11 @@ import errorHandlerMiddleware from './middleware/errorMiddleware.js';
 
 // Load env vars
 config({
-     path: './config/config.env'
+     path: '.env'
 });
-
 
 // Routes
 import bootcamps from './routes/bootcampRoute.js';
-
 
 const app = express();
 
