@@ -5,6 +5,9 @@ import cookieParser from 'cookie-parser';
 import mongoSanitize from 'express-mongo-sanitize';
 import helmet from 'helmet';
 import xss_clean from 'xss-clean'; 
+import rateLimit from 'express-rate-limit';
+import hpp from 'hpp';
+import cors from 'cors';
 import { config } from 'dotenv';
 import morgan from 'morgan';
 import errorHandlerMiddleware from './middleware/errorMiddleware.js';
@@ -22,6 +25,8 @@ connectDB();
 import bootcamps from './routes/bootcampRoute.js';
 import courses from './routes/coursesRoute.js';
 import auth from './routes/authRoute.js';
+import user from './routes/userRoute.js';
+import review from './routes/reviewRoute.js';
 
 const app = express();
 
@@ -48,6 +53,19 @@ app.use(xss_clean());
 // Set security headers
 app.use(helmet());
 
+// rate limit
+const limiter = rateLimit({
+     windowMs: 10 * 60 * 1000, // 10 mins
+     max: 100
+});
+app.use(limiter);
+
+// Prevent http param pollution
+app.use(hpp());
+
+// Enable CORS
+app.use(cors());
+
 // serve static folder middleware
 app.use(express.static(path.join(__dirname,'public')))
 
@@ -63,6 +81,8 @@ app.get('/ping', (req, res) => {
 app.use('/api/v1/bootcamps', bootcamps);
 app.use('/api/v1/courses', courses);
 app.use('/api/v1/auth', auth);
+app.use('/api/v1/users', user);
+app.use('/api/v1/reviews', review);
 
 // Error handler Middleware
 app.use(errorHandlerMiddleware);
