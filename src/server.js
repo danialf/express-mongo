@@ -2,6 +2,7 @@ import path from 'path';
 import express from 'express';
 import fileupload from 'express-fileupload';
 import cookieParser from 'cookie-parser';
+import mongoSanitize from 'express-mongo-sanitize';
 import { config } from 'dotenv';
 import morgan from 'morgan';
 import errorHandlerMiddleware from './middleware/errorMiddleware.js';
@@ -35,6 +36,9 @@ if (process.env.NODE_ENV !== "production") {
 
 // File upload
 app.use(fileupload());
+
+// Sanitize mongo
+app.use(mongoSanitize());
 
 // serve static folder middleware
 app.use(express.static(path.join(__dirname,'public')))
