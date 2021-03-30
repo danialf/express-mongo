@@ -8,11 +8,17 @@ import {
      deleteCourse
 } from '../controllers/coursesController.js';
 
+import Course from '../models/Course.js';
+import advancedResult from '../middleware/advancedResultsMiddleware.js';
+
 const router = Router({ mergeParams: true });
 
 router
      .route('/')
-     .get(getCourses)
+     .get(advancedResult(Course,{
+          path: 'bootcamp',
+          select: 'name description'
+     }), getCourses)
      .post(addCourse);
 
 router

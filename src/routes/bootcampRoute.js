@@ -10,6 +10,9 @@ import {
      bootcampPhotoUpload
 } from '../controllers/bootcampController.js';
 
+import Bootcamp from '../models/Bootcamp.js';
+import advancedResult from '../middleware/advancedResultsMiddleware.js';
+
 import courseRouter from './coursesRoute';
 
 const router = Router();
@@ -19,7 +22,7 @@ router.use('/:bootcampId/courses', courseRouter);
 
 router
      .route('/')
-     .get(getBootcamps)
+     .get(advancedResult(Bootcamp, 'courses'), getBootcamps)
      .post(postBootcamp);
 
 router
