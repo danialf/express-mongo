@@ -3,6 +3,7 @@ import express from 'express';
 import fileupload from 'express-fileupload';
 import cookieParser from 'cookie-parser';
 import mongoSanitize from 'express-mongo-sanitize';
+import helmet from 'helmet';
 import { config } from 'dotenv';
 import morgan from 'morgan';
 import errorHandlerMiddleware from './middleware/errorMiddleware.js';
@@ -39,6 +40,9 @@ app.use(fileupload());
 
 // Sanitize mongo
 app.use(mongoSanitize());
+
+// Set security headers
+app.use(helmet());
 
 // serve static folder middleware
 app.use(express.static(path.join(__dirname,'public')))
