@@ -17,6 +17,12 @@ export const getCourses = asyncHandler(async (req,res,next) =>{
           query = Course.find();
      }
 
+     // populate bootcamps
+     query = query.populate({
+          path: 'bootcamp',
+          select: 'name description'
+     })
+
      const courses = await query;
 
      res.status(200).json({
