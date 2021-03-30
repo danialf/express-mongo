@@ -1,3 +1,4 @@
+import path from 'path';
 import Bootcamp from '../models/Bootcamp.js';
 import ErrorResponse from '../response/errorResponse.js';
 import asyncHandler from '../middleware/asyncMiddleware.js';
@@ -53,7 +54,7 @@ export const getBootcamps = asyncHandler(async (req, res, next) => {
      const limit = parseInt(req.query.limit, 10) || 25;
      const startIndex = (page - 1) * limit;
      const endIndex = page * limit;
-     
+
      query = query.skip(startIndex).limit(limit);
 
      // Executing query
@@ -192,3 +193,47 @@ const _getBootcampsInRadius = async (lng, lat, distance, res) => {
           data: bootcamps
      });
 }
+
+// @desc Upload photo for bootcamp
+// @route DELETE /api/v1/bootcamps/:id/photo
+// @access PRIVATE
+export const bootcampPhotoUpload = asyncHandler(async (req, res, next) => {
+     const bootcamp = await Bootcamp.findById(req.params.id);
+
+     if (!bootcamp) {
+          return next(new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404));
+     }
+
+     if (!req.files) {
+          return next(new ErrorResponse('please upload a photo', 400));
+     }
+
+     const file = req.files.file;
+
+     // Make sure the image is a photo
+     if (!file.mimetype.startWith('image')) {
+          return next(new ErrorResponse('please upload a image file', 400));
+     }
+
+     // Check file size
+     if (file.size > 1024000) {
+          return next(new ErrorResponse('please upload a photo smaller than 1 MB', 400));
+     }
+
+     // Create custom filename
+     file.name = `photo_${bootcamp._id}${path.parse(file.name).ext}`;
+
+     // Save images to public image upload folder
+     file.mv(`./public/uploads/${file.name}`, async err => {
+          if (err) {
+               console.error(err);
+          }
+
+          await Bootcamp.findByIdAndUpdate(req.params.id, { photo: file.name });
+     })
+
+     res.status(200).json({
+          success: true,
+          data: file.name
+     })
+})

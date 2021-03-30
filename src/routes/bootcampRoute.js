@@ -6,10 +6,11 @@ import {
      postBootcamp,
      updateBootcamp,
      deleteBootcamp,
-     getBootcampsInRadius
+     getBootcampsInRadius,
+     bootcampPhotoUpload
 } from '../controllers/bootcampController.js';
 
-import courseRouter from './coursesRoute'; 
+import courseRouter from './coursesRoute';
 
 const router = Router();
 
@@ -34,5 +35,9 @@ router
 router
      .route('/radius:/lng/:lat/:distance')
      .get(getBootcampsInRadius);
+
+router
+     .route('/:id/photo')
+     .put(bootcampPhotoUpload);
 
 export default router;

@@ -1,17 +1,23 @@
+import path from 'path';
 import express from 'express';
+import fileupload from 'express-fileupload';
 import { config } from 'dotenv';
 import morgan from 'morgan';
 import errorHandlerMiddleware from './middleware/errorMiddleware.js';
-// import connectDB from './config/db';
+import connectDB from './config/db.js';
 
 // Load env vars
 config({
      path: '.env'
 });
 
+// Connect to Database
+connectDB();
+
 // Routes
 import bootcamps from './routes/bootcampRoute.js';
 import courses from './routes/coursesRoute.js';
+import connectDb from './config/db';
 
 const app = express();
 
@@ -22,6 +28,12 @@ app.use(express.json());
 if (process.env.NODE_ENV !== "production") {
      app.use(morgan('dev'));
 }
+
+// File upload
+app.use(fileupload());
+
+// serve static folder middleware
+app.use(express.static(path.join(__dirname,'public')))
 
 // ping
 app.get('/ping', (req, res) => {
