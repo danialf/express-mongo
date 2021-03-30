@@ -4,6 +4,7 @@ import fileupload from 'express-fileupload';
 import cookieParser from 'cookie-parser';
 import mongoSanitize from 'express-mongo-sanitize';
 import helmet from 'helmet';
+import xss_clean from 'xss-clean'; 
 import { config } from 'dotenv';
 import morgan from 'morgan';
 import errorHandlerMiddleware from './middleware/errorMiddleware.js';
@@ -40,6 +41,9 @@ app.use(fileupload());
 
 // Sanitize mongo
 app.use(mongoSanitize());
+
+// XSS Attack prevention
+app.use(xss_clean());
 
 // Set security headers
 app.use(helmet());
