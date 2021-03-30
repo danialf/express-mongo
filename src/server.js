@@ -11,6 +11,7 @@ config({
 
 // Routes
 import bootcamps from './routes/bootcampRoute.js';
+import courses from './routes/coursesRoute.js';
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.get('/ping', (req, res) => {
 
 // Mount routes
 app.use('/api/v1/bootcamps', bootcamps);
+app.use('/api/v1/courses', courses);
 
 // Error handler Middleware
 app.use(errorHandlerMiddleware);

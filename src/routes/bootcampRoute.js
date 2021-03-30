@@ -9,7 +9,12 @@ import {
      getBootcampsInRadius
 } from '../controllers/bootcampController.js';
 
+import courseRouter from './coursesRoute'; 
+
 const router = Router();
+
+// Re-route other resource router
+router.use('/:bootcampId/courses', courseRouter);
 
 router
      .route('/')
