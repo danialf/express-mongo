@@ -1,6 +1,7 @@
 import path from 'path';
 import express from 'express';
 import fileupload from 'express-fileupload';
+import cookieParser from 'cookie-parser';
 import { config } from 'dotenv';
 import morgan from 'morgan';
 import errorHandlerMiddleware from './middleware/errorMiddleware.js';
@@ -17,12 +18,15 @@ connectDB();
 // Routes
 import bootcamps from './routes/bootcampRoute.js';
 import courses from './routes/coursesRoute.js';
-import connectDb from './config/db';
+import auth from './routes/authRoute.js';
 
 const app = express();
 
 // Body parser
 app.use(express.json());
+
+// Cookie Parser
+app.use(cookieParser());
 
 // Dev logging middleware
 if (process.env.NODE_ENV !== "production") {
@@ -46,6 +50,7 @@ app.get('/ping', (req, res) => {
 // Mount routes
 app.use('/api/v1/bootcamps', bootcamps);
 app.use('/api/v1/courses', courses);
+app.use('/api/v1/auth', auth);
 
 // Error handler Middleware
 app.use(errorHandlerMiddleware);

@@ -15,6 +15,8 @@ import advancedResult from '../middleware/advancedResultsMiddleware.js';
 
 import courseRouter from './coursesRoute';
 
+import { protect, authorize } from '../middleware/authMiddleware.js';
+
 const router = Router();
 
 // Re-route other resource router
@@ -23,13 +25,13 @@ router.use('/:bootcampId/courses', courseRouter);
 router
      .route('/')
      .get(advancedResult(Bootcamp, 'courses'), getBootcamps)
-     .post(postBootcamp);
+     .post(protect, authorize('publisher', 'admin'), postBootcamp);
 
 router
      .route('/:id')
      .get(getBootcamp)
-     .put(updateBootcamp)
-     .delete(deleteBootcamp);
+     .put(protect, authorize('publisher', 'admin'), updateBootcamp)
+     .delete(protect, authorize('publisher', 'admin'), deleteBootcamp);
 
 router
      .route('/radius:/zipcode/:distance')
@@ -41,6 +43,6 @@ router
 
 router
      .route('/:id/photo')
-     .put(bootcampPhotoUpload);
+     .put(protect, authorize('publisher', 'admin'), bootcampPhotoUpload);
 
 export default router;

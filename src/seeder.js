@@ -14,6 +14,7 @@ const __dirname = path.resolve();
 // Load models
 import Bootcamps from './models/Bootcamp.js';
 import Courses from './models/Course.js';
+import Users from './models/User.js';
 
 
 // Connect to DB
@@ -29,12 +30,16 @@ const bootcamps = JSON.parse(
     fs.readFileSync(`${__dirname}/src/_data/bootcamps.json`, 'utf8'));
 const courses = JSON.parse(
     fs.readFileSync(`${__dirname}/src/_data/courses.json`, 'utf8'));
+const users = JSON.parse(
+    fs.readFileSync(`${__dirname}/src/_data/courses.json`, 'utf8'));
+
 
 // Import into DB
 const importData = async () => {
     try {
         await Bootcamps.create(bootcamps);
         await Courses.create(courses);
+        await Users.create(users);
 
         console.log('Data imported');
         process.exit();
@@ -48,6 +53,7 @@ const removeData = async () => {
     try {
         await Bootcamps.deleteMany();
         await Courses.deleteMany();
+        await Users.deleteMany();
 
         console.log('Data imported');
         process.exit();
